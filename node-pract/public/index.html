@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Viewer</title>
+</head>
+<body>
+    <h1>File List</h1>
+    <ul id="fileList"></ul>
+    <div id="fileContent"></div>
+    <script>
+        const fileList = document.getElementById("fileList");
+        const fileContent = document.getElementById("fileContent");
+
+        // Fetch the list of files
+        fetch('/files')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(file => {
+                    const listItem = document.createElement("li");
+                    const link = document.createElement("a");
+                    link.href = `/files/${file}`;
+                    link.textContent = file;
+                    link.addEventListener("click", function(event) {
+                        event.preventDefault();
+                        
+                        fetch(link.href)
+                            .then(response => response.text())
+                            .then(content => {
+                                fileContent.innerHTML = content;
+                            });
+                    });
+                    listItem.appendChild(link);
+                    fileList.appendChild(listItem);
+                });
+            });
+    </script>
+</body>
+</html>
